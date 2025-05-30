@@ -20,7 +20,7 @@ conn = get_connection()
 
 # Judul & Input
 st.title("📋 Cari Data Siswa Berdasarkan NISN")
-akun = st.text_input("Masukkan NISN:", placeholder="00454323-04122008")
+akun = st.text_input("Masukkan NISN:", placeholder="Contoh: 00454323-04122008")
 cek = st.button("🔍 Cek Data")
 
 # Aksi saat tombol ditekan
