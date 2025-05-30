@@ -13,7 +13,7 @@ def load_data():
 # Cache koneksi ke database
 @st.cache_resource
 def get_connection():
-    return sqlite3.connect('siswa.db')
+    return sqlite3.connect('siswa.db', check_same_thread=False)
 
 # Load koneksi
 conn = get_connection()
