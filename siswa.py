@@ -6,10 +6,10 @@ import sqlite3
 @st.cache_resource
 def load_data():
     df = pd.read_excel('siswa.xlsx')
-    df['Akun'] = df['Akun'].astype(str)
-    conn = sqlite3.connect('siswa.db', check_same_thread=False)
-    df.to_sql('siswa', conn, if_exists='replace', index=False)
-    return conn
+    conn = sqlite3.connect('siswa.db')
+    df = pd.read_sql_query("SELECT * FROM siswa", conn)
+    conn.close()
+    return df
 
 # Langkah 2: Koneksi database
 conn = load_data()
