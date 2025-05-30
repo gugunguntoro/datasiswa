@@ -2,24 +2,28 @@ import streamlit as st
 import pandas as pd
 import sqlite3
 
-# Langkah 1: Load dan simpan data ke SQLite
-@st.cache_resource
+# Cache DataFrame dari database
+@st.cache_data
 def load_data():
-    df = pd.read_excel('siswa.xlsx')
     conn = sqlite3.connect('siswa.db')
     df = pd.read_sql_query("SELECT * FROM siswa", conn)
     conn.close()
     return df
 
-# Langkah 2: Koneksi database
-conn = load_data()
+# Cache koneksi ke database
+@st.cache_resource
+def get_connection():
+    return sqlite3.connect('siswa.db')
 
-# Langkah 3: Judul & Input
+# Load koneksi
+conn = get_connection()
+
+# Judul & Input
 st.title("📋 Cari Data Siswa Berdasarkan NISN")
 akun = st.text_input("Masukkan NISN:", placeholder="00454323-04122008")
 cek = st.button("🔍 Cek Data")
 
-# Langkah 4: Aksi saat tombol diklik
+# Aksi saat tombol ditekan
 if cek:
     if akun.strip() == "":
         st.warning("⚠️ Silakan masukkan NISN terlebih dahulu.")
@@ -32,7 +36,6 @@ if cek:
             kolom = [desc[0] for desc in cursor.description]
             data_dict = dict(zip(kolom, hasil))
 
-            # Langkah 5: Tampilan elegan
             st.markdown(
                 f"""
                 <div style="border: 2px solid #4CAF50; padding: 16px; border-radius: 10px; background-color: #f0fff0;">
@@ -46,9 +49,7 @@ if cek:
                 </div>
                 """,
                 unsafe_allow_html=True
-                
             )
-            st.markdown("[Pengjuan Perbaikan](https://example.com)")
+            st.markdown("[Ajukan Perbaikan](https://example.com)")
         else:
             st.error("❌ NISN tidak ditemukan dalam database.")
-
